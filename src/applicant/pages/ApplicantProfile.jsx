@@ -17,23 +17,10 @@ export const ApplicantProfile = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        if (currentUser?.id && currentUser.id !== 'APPLICANT-SESSION') {
-          const data = await api.getApplicationById(currentUser.id);
-          setApp(data);
-          setPhone(data?.phone || currentUser?.phone || '');
-          setEmail(data?.email || currentUser?.email || '');
-        } else {
-          const apps = await api.getApplications();
-          if (apps.length > 0) {
-            setApp(apps[0]);
-            setPhone(apps[0].phone || '');
-            setEmail(apps[0].email || '');
-          } else {
-            setApp(null);
-            setPhone(currentUser?.phone || '');
-            setEmail(currentUser?.email || '');
-          }
-        }
+        const data = await api.getActiveApplicantApplication(currentUser?.id);
+        setApp(data);
+        setPhone(data?.phone || currentUser?.phone || '');
+        setEmail(data?.email || currentUser?.email || '');
       } catch (err) {
         console.error(err);
       } finally {

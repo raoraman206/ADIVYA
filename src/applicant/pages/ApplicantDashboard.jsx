@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 
 export const ApplicantDashboard = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, sessionApplication } = useAuth();
   const [application, setApplication] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,14 +33,8 @@ export const ApplicantDashboard = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const apps = await api.getApplications();
-        let app = null;
-        if (currentUser?.id) {
-          app = apps.find(a => a.id === currentUser.id) || (apps.length > 0 ? apps[0] : null);
-        } else if (apps.length > 0) {
-          app = apps[0];
-        }
-        setApplication(app);
+        const app = await api.getActiveApplicantApplication(currentUser?.id);
+        setApplication(app || null);
         if (app?.id) {
           const notifs = await api.getNotifications('applicant', app.id);
           setNotifications(notifs);
@@ -54,7 +48,7 @@ export const ApplicantDashboard = () => {
       }
     };
     fetchData();
-  }, [currentUser]);
+  }, [currentUser, sessionApplication]);
 
   if (loading) {
     return (
@@ -79,6 +73,7 @@ export const ApplicantDashboard = () => {
   if (application?.status === 'SUBMITTED') currentStageIndex = 0;
   if (application?.status === 'UNDER_VERIFICATION' || application?.status === 'DEFICIENT') currentStageIndex = 1;
   if (application?.status === 'ELIGIBLE') currentStageIndex = 2;
+  if (application?.status === 'SCRUTINY') currentStageIndex = 3;
   if (application?.status === 'SCREENED') currentStageIndex = 4;
   if (application?.status === 'APPROVED') currentStageIndex = 5;
 
@@ -157,67 +152,78 @@ export const ApplicantDashboard = () => {
 
       {/* 3. APPLICATION PROGRESS INDICATOR */}
       <Card title="Application Lifecycle Progress" subtitle="Multi-stage verification and selection tracking">
-        {application ? (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-              {stages.map((stage, idx) => {
-                const isPast = idx < currentStageIndex;
-                const isCurrent = idx === currentStageIndex;
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+            {stages.map((stage, idx) => {
+              if (!application) {
+                // Inactive / neutral / disabled state when NO application submitted
                 return (
                   <div
                     key={stage.key}
-                    className={`p-3 rounded-xl border text-center transition-all ${
-                      isCurrent
-                        ? hasDeficiency
-                          ? 'bg-amber-50 border-amber-300 text-amber-900 font-bold'
-                          : 'bg-blue-50 border-[#014BAA] text-[#014BAA] font-bold shadow-xs'
-                        : isPast
-                        ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                        : 'bg-slate-50 border-slate-200 text-slate-400'
-                    }`}
+                    className="p-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-400 text-center transition-all"
                   >
                     <div className="flex items-center justify-center mb-1.5">
-                      {isPast ? (
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      ) : isCurrent ? (
-                        hasDeficiency ? (
-                          <AlertTriangle className="w-4 h-4 text-amber-600 animate-pulse" />
-                        ) : (
-                          <div className="w-2.5 h-2.5 rounded-full bg-[#014BAA] animate-ping"></div>
-                        )
-                      ) : (
-                        <div className="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
-                      )}
+                      <div className="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
                     </div>
-                    <p className="text-[11px] leading-tight">{stage.label}</p>
-                    <span className="text-[9px] uppercase tracking-wider opacity-70 block mt-0.5">
-                      {isPast ? 'Done' : isCurrent ? (hasDeficiency ? 'Action Needed' : 'Active') : 'Pending'}
+                    <p className="text-[11px] leading-tight text-slate-500 font-medium">{stage.label}</p>
+                    <span className="text-[9px] uppercase tracking-wider text-slate-400 block mt-0.5 font-semibold">
+                      Pending
                     </span>
                   </div>
                 );
-              })}
-            </div>
+              }
 
-            <div className="flex flex-wrap items-center justify-between text-xs text-slate-500 pt-2 border-t border-[#E8DDD7]">
-              <span>Current Status: <strong className="text-slate-800">{application?.status?.replace('_', ' ')}</strong></span>
-              <span>Last Updated: <strong className="text-slate-800">{new Date(application?.lastUpdatedAt).toLocaleDateString()}</strong></span>
-            </div>
+              const isPast = idx < currentStageIndex;
+              const isCurrent = idx === currentStageIndex;
+              return (
+                <div
+                  key={stage.key}
+                  className={`p-3 rounded-xl border text-center transition-all ${
+                    isCurrent
+                      ? hasDeficiency
+                        ? 'bg-amber-50 border-amber-300 text-amber-900 font-bold'
+                        : 'bg-blue-50 border-[#014BAA] text-[#014BAA] font-bold shadow-xs'
+                      : isPast
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                      : 'bg-slate-50 border-slate-200 text-slate-400'
+                  }`}
+                >
+                  <div className="flex items-center justify-center mb-1.5">
+                    {isPast ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    ) : isCurrent ? (
+                      hasDeficiency ? (
+                        <AlertTriangle className="w-4 h-4 text-amber-600 animate-pulse" />
+                      ) : (
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#014BAA] animate-ping"></div>
+                      )
+                    ) : (
+                      <div className="w-2.5 h-2.5 rounded-full bg-slate-300"></div>
+                    )}
+                  </div>
+                  <p className="text-[11px] leading-tight">{stage.label}</p>
+                  <span className="text-[9px] uppercase tracking-wider opacity-70 block mt-0.5">
+                    {isPast ? 'Done' : isCurrent ? (hasDeficiency ? 'Action Needed' : 'Active') : 'Pending'}
+                  </span>
+                </div>
+              );
+            })}
           </div>
-        ) : (
-          <div className="py-8 text-center text-xs text-slate-500 space-y-2">
-            <p className="font-semibold text-slate-700">No active applications yet</p>
-            <p>Once you submit an application, the 7-stage verification and award milestones will appear here.</p>
-            <div className="pt-2">
-              <Link
-                to="/applicant/application"
-                className="inline-flex items-center space-x-1.5 text-xs font-bold text-[#014BAA] hover:underline"
-              >
-                <span>Apply for a Scholarship / Fellowship</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
+
+          <div className="flex flex-wrap items-center justify-between text-xs text-slate-500 pt-2 border-t border-[#E8DDD7]">
+            {application ? (
+              <>
+                <span>Current Status: <strong className="text-slate-800">{application?.status?.replace('_', ' ')}</strong></span>
+                <span>Last Updated: <strong className="text-slate-800">{new Date(application?.lastUpdatedAt || application?.submittedAt || Date.now()).toLocaleDateString()}</strong></span>
+              </>
+            ) : (
+              <>
+                <span className="font-semibold text-slate-700">No active application</span>
+                <span className="text-slate-500">Submit an application to begin tracking your progress.</span>
+              </>
+            )}
           </div>
-        )}
+        </div>
       </Card>
 
       {/* 4. THREE MAIN COLUMNS */}

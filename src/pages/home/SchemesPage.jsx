@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
-import { GraduationCap, Globe, ArrowRight, CheckCircle2, FileText, Calendar, IndianRupee } from 'lucide-react';
+import { GraduationCap, Globe, ArrowRight, CheckCircle2, FileText, Calendar, IndianRupee, Layers } from 'lucide-react';
 import { TribalMotifDivider } from '../../components/heritage/TribalPatterns';
 
 export const SchemesPage = () => {
@@ -122,6 +122,79 @@ export const SchemesPage = () => {
             </div>
           </div>
         ))}
+
+        {/* 3. PLACEHOLDER SCHEME CARD */}
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-[#E8DDD7] shadow-xs space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E8DDD7] pb-6">
+            <div className="flex items-start space-x-4">
+              <div className="p-3.5 rounded-2xl bg-slate-100 text-slate-500">
+                <Layers className="w-8 h-8" />
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 uppercase">
+                    COMING SOON
+                  </span>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded bg-slate-50 text-slate-500">
+                    Future Scheme
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mt-1">
+                  More Schemes Coming Soon
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">Central Sector • Scheduled Tribes</p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              disabled
+              className="inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-xl bg-slate-100 text-slate-400 text-xs font-semibold cursor-not-allowed border border-slate-200"
+            >
+              <span>Coming Soon</span>
+            </button>
+          </div>
+
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Additional scholarship and fellowship opportunities will be added to Adivya as more schemes are onboarded.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-[#F8F3F0] p-4 rounded-xl border border-[#E8DDD7] space-y-2">
+              <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-700">
+                <IndianRupee className="w-3.5 h-3.5 text-slate-400" />
+                <span>Financial Benefits</span>
+              </div>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Direct Benefit Transfer (DBT) fellowship stipends and research grants.
+              </p>
+            </div>
+
+            <div className="bg-[#F8F3F0] p-4 rounded-xl border border-[#E8DDD7] space-y-2">
+              <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-700">
+                <CheckCircle2 className="w-3.5 h-3.5 text-slate-400" />
+                <span>Key Eligibility Criteria</span>
+              </div>
+              <ul className="text-xs text-slate-600 space-y-1">
+                <li>• Under active onboarding</li>
+                <li>• Scheduled Tribe (ST) scholars</li>
+                <li>• Criteria published upon cycle launch</li>
+              </ul>
+            </div>
+
+            <div className="bg-[#F8F3F0] p-4 rounded-xl border border-[#E8DDD7] space-y-2">
+              <div className="flex items-center space-x-1.5 text-xs font-bold text-slate-700">
+                <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                <span>Cycle Announcement</span>
+              </div>
+              <ul className="text-xs text-slate-600 space-y-1">
+                <li>• Status: <strong>Upcoming</strong></li>
+                <li>• Portal Mode: 100% Online</li>
+                <li>• Timelines to be notified</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

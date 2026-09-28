@@ -24,7 +24,7 @@ export const ApplicationForm = () => {
   const [searchParams] = useSearchParams();
   const initialScheme = searchParams.get('scheme') || 'NFST';
   const navigate = useNavigate();
-  const { loginApplicant } = useAuth();
+  const { loginApplicant, setSessionApplication } = useAuth();
 
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
@@ -107,7 +107,18 @@ export const ApplicationForm = () => {
     setSubmitting(true);
     try {
       const createdApp = await api.submitApplication(formData);
-      loginApplicant(createdApp.id);
+      if (setSessionApplication) {
+        setSessionApplication(createdApp);
+      }
+      api.setSubmittedApplication(createdApp);
+      loginApplicant({
+        id: createdApp.id,
+        name: createdApp.applicantName,
+        email: createdApp.email,
+        phone: createdApp.phone,
+        role: 'applicant',
+        hasDeficiency: false
+      });
       alert(`Application Submitted Successfully! Assigned Application ID: ${createdApp.id}`);
       navigate('/applicant/dashboard');
     } catch (err) {

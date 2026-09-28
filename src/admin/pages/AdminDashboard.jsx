@@ -121,7 +121,7 @@ export const AdminDashboard = () => {
       </div>
 
       {/* Top Metric Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 items-stretch">
         <StatCard
           title="Total Submissions"
           value={totalApps}
@@ -166,11 +166,11 @@ export const AdminDashboard = () => {
         />
       </div>
 
-      {/* Visual Analytics Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Visual Analytics Charts Grid - 3 Equal Height Compact Cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-stretch">
         {/* Chart 1: Applications by Scheme */}
-        <div className="lg:col-span-4 bg-white p-5 rounded-2xl border border-[#E8DDD7] shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-[#E8DDD7] pb-3">
+        <div className="bg-white p-4 rounded-2xl border border-[#E8DDD7] shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between border-b border-[#E8DDD7] pb-2.5">
             <div>
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Distribution</h3>
               <p className="text-sm font-bold text-slate-900">Applications by Scheme</p>
@@ -178,9 +178,9 @@ export const AdminDashboard = () => {
             <span className="text-[11px] font-semibold text-[#014BAA]">NFST vs NOS</span>
           </div>
 
-          <div className="h-56">
+          <div className="h-36 flex items-center justify-center mt-2">
             {applications.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center p-4">
+              <div className="h-full flex flex-col items-center justify-center text-center p-2">
                 <p className="text-xs font-semibold text-slate-600">No data available yet</p>
                 <p className="text-[11px] text-slate-400 mt-0.5">Analytics will appear once applications are submitted</p>
               </div>
@@ -191,8 +191,8 @@ export const AdminDashboard = () => {
                     data={schemeData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={50}
-                    outerRadius={80}
+                    innerRadius={36}
+                    outerRadius={56}
                     paddingAngle={5}
                     dataKey="value"
                   >
@@ -201,7 +201,7 @@ export const AdminDashboard = () => {
                     ))}
                   </Pie>
                   <Tooltip />
-                  <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
+                  <Legend iconType="circle" wrapperStyle={{ fontSize: '10px' }} />
                 </PieChart>
               </ResponsiveContainer>
             )}
@@ -209,8 +209,8 @@ export const AdminDashboard = () => {
         </div>
 
         {/* Chart 2: Pipeline Stage Progression */}
-        <div className="lg:col-span-4 bg-white p-5 rounded-2xl border border-[#E8DDD7] shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-[#E8DDD7] pb-3">
+        <div className="bg-white p-4 rounded-2xl border border-[#E8DDD7] shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between border-b border-[#E8DDD7] pb-2.5">
             <div>
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Processing</h3>
               <p className="text-sm font-bold text-slate-900">Applications by Stage</p>
@@ -218,9 +218,9 @@ export const AdminDashboard = () => {
             <span className="text-[11px] font-semibold text-slate-500">Live Stage Count</span>
           </div>
 
-          <div className="h-56">
+          <div className="h-36 flex items-center justify-center mt-2">
             {applications.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center p-4">
+              <div className="h-full flex flex-col items-center justify-center text-center p-2">
                 <p className="text-xs font-semibold text-slate-600">No data available yet</p>
                 <p className="text-[11px] text-slate-400 mt-0.5">Analytics will appear once applications are submitted</p>
               </div>
@@ -228,10 +228,10 @@ export const AdminDashboard = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={statusData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                  <XAxis dataKey="stage" tick={{ fontSize: 11 }} />
-                  <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
+                  <XAxis dataKey="stage" tick={{ fontSize: 10 }} />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 10 }} />
                   <Tooltip />
-                  <Bar dataKey="count" radius={[6, 6, 0, 0]}>
+                  <Bar dataKey="count" radius={[4, 4, 0, 0]}>
                     {statusData.map((entry, index) => (
                       <Cell key={`bar-${index}`} fill={entry.fill} />
                     ))}
@@ -243,8 +243,8 @@ export const AdminDashboard = () => {
         </div>
 
         {/* Chart 3: Monthly Applications Inflow */}
-        <div className="lg:col-span-4 bg-white p-5 rounded-2xl border border-[#E8DDD7] shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-[#E8DDD7] pb-3">
+        <div className="bg-white p-4 rounded-2xl border border-[#E8DDD7] shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between border-b border-[#E8DDD7] pb-2.5">
             <div>
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500">Inflow Trend</h3>
               <p className="text-sm font-bold text-slate-900">Monthly Submissions</p>
@@ -252,9 +252,9 @@ export const AdminDashboard = () => {
             <span className="text-[11px] font-semibold text-emerald-600">2026 Cycle</span>
           </div>
 
-          <div className="h-56">
+          <div className="h-36 flex items-center justify-center mt-2">
             {applications.length === 0 ? (
-              <div className="h-full flex flex-col items-center justify-center text-center p-4">
+              <div className="h-full flex flex-col items-center justify-center text-center p-2">
                 <p className="text-xs font-semibold text-slate-600">No data available yet</p>
                 <p className="text-[11px] text-slate-400 mt-0.5">Analytics will appear once applications are submitted</p>
               </div>
@@ -262,12 +262,12 @@ export const AdminDashboard = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={monthlyData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                  <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                  <YAxis tick={{ fontSize: 11 }} />
+                  <XAxis dataKey="month" tick={{ fontSize: 10 }} />
+                  <YAxis allowDecimals={false} tick={{ fontSize: 10 }} />
                   <Tooltip />
-                  <Legend iconType="circle" wrapperStyle={{ fontSize: '11px' }} />
-                  <Line type="monotone" dataKey="NFST" stroke="#014BAA" strokeWidth={2.5} dot={{ r: 4 }} />
-                  <Line type="monotone" dataKey="NOS" stroke="#D97706" strokeWidth={2.5} dot={{ r: 4 }} />
+                  <Legend iconType="circle" wrapperStyle={{ fontSize: '10px' }} />
+                  <Line type="monotone" dataKey="NFST" stroke="#014BAA" strokeWidth={2} dot={{ r: 3 }} />
+                  <Line type="monotone" dataKey="NOS" stroke="#D97706" strokeWidth={2} dot={{ r: 3 }} />
                 </LineChart>
               </ResponsiveContainer>
             )}

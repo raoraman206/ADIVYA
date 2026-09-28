@@ -25,13 +25,8 @@ export const AIassistedVerification = () => {
   useEffect(() => {
     const fetchApp = async () => {
       try {
-        if (currentUser?.id && currentUser.id !== 'APPLICANT-SESSION') {
-          const app = await api.getApplicationById(currentUser.id);
-          setApplication(app);
-        } else {
-          const apps = await api.getApplications();
-          setApplication(apps[0] || null);
-        }
+        const app = await api.getActiveApplicantApplication(currentUser?.id);
+        setApplication(app);
       } catch (err) {
         console.error(err);
       } finally {

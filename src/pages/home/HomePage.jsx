@@ -14,7 +14,8 @@ import {
   AlertCircle, 
   Users, 
   Clock, 
-  Check
+  Check,
+  Layers
 } from 'lucide-react';
 import { TribalMotifDivider, TribalCornerMotif } from '../../components/heritage/TribalPatterns';
 
@@ -248,7 +249,7 @@ export const HomePage = () => {
           <TribalMotifDivider className="mt-3" color="#014BAA" opacity={0.3} />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* SCHEME 1: NFST */}
           <div className="bg-white rounded-2xl p-7 border border-[#E8DDD7] shadow-xs flex flex-col justify-between">
             <div>
@@ -358,6 +359,62 @@ export const HomePage = () => {
                 <span>Apply for NOS</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
+            </div>
+          </div>
+
+          {/* SCHEME 3: PLACEHOLDER */}
+          <div className="bg-white rounded-2xl p-7 border border-[#E8DDD7] shadow-xs flex flex-col justify-between">
+            <div>
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div className="flex items-center space-x-3">
+                  <div className="p-3 bg-slate-100 text-slate-600 rounded-xl">
+                    <Layers className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-500">Upcoming Portfolio</span>
+                    <h3 className="text-lg font-bold text-slate-900">
+                      More Schemes Coming Soon
+                    </h3>
+                  </div>
+                </div>
+                <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                  COMING SOON
+                </span>
+              </div>
+
+              <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                Additional scholarship and fellowship opportunities will be added to Adivya as more schemes are onboarded.
+              </p>
+
+              <div className="bg-[#F8F3F0] rounded-xl p-4 space-y-2 text-xs border border-[#E8DDD7] mb-6">
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Status:</span>
+                  <span className="font-semibold text-slate-700">Scheme onboarding in progress</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Target Beneficiaries:</span>
+                  <span className="font-semibold text-slate-700">ST Students & Researchers</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Verification:</span>
+                  <span className="font-semibold text-slate-700">AI/OCR Automated Pipeline</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Disbursement:</span>
+                  <span className="font-semibold text-slate-700">Direct Benefit Transfer (DBT)</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-xs text-slate-400">Launch Timeline: Forthcoming</span>
+              <button
+                type="button"
+                disabled
+                className="inline-flex items-center space-x-1.5 text-xs font-semibold text-slate-400 cursor-not-allowed bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200"
+              >
+                <span>Coming Soon</span>
+              </button>
             </div>
           </div>
         </div>

@@ -101,14 +101,11 @@ export const ApplicantLayout = () => {
 
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 rounded-full bg-[#014BAA] text-white flex items-center justify-center font-bold text-xs">
-                {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'A'}
+                {currentUser?.name ? currentUser.name.trim().charAt(0).toUpperCase() : 'A'}
               </div>
               <div className="hidden md:block text-left">
                 <p className="text-xs font-bold text-slate-900 leading-tight">
                   {currentUser?.name || 'Applicant'}
-                </p>
-                <p className="text-[10px] text-slate-500">
-                  {currentUser?.id ? `ID: ${currentUser.id}` : 'Applicant Account'}
                 </p>
               </div>
             </div>

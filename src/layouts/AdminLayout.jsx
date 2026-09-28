@@ -65,7 +65,7 @@ export const AdminLayout = () => {
     <div className="min-h-screen flex flex-col bg-[#F8F3F0] text-slate-900">
       {/* Admin Header */}
       <header className="sticky top-0 z-30 bg-slate-900 text-white border-b border-slate-800 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+        <div className="w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <div className="flex items-center space-x-3">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -125,21 +125,21 @@ export const AdminLayout = () => {
 
             <div className="flex items-center space-x-2 text-left">
               <div className="w-8 h-8 rounded-full bg-[#014BAA] text-white flex items-center justify-center font-bold text-xs border border-blue-400">
-                {currentUser?.name ? currentUser.name.charAt(0).toUpperCase() : 'O'}
+                {currentUser?.name ? currentUser.name.trim().charAt(0).toUpperCase() : 'A'}
               </div>
               <div className="hidden md:block">
                 <p className="text-xs font-bold text-white leading-tight">
-                  {currentUser?.name || 'Ministry Scrutiny Officer'}
+                  {currentUser?.name || 'Admin'}
                 </p>
                 <p className="text-[10px] text-slate-400">
-                  {currentUser?.designation || 'Scrutiny Desk'}
+                  Admin ID: {currentUser?.adminId || '001'}
                 </p>
               </div>
             </div>
 
             <button
               onClick={handleLogout}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition cursor-pointer"
               title="Logout"
               aria-label="Logout"
             >
@@ -149,54 +149,53 @@ export const AdminLayout = () => {
         </div>
       </header>
 
-      {/* Main Admin Workspace */}
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex gap-6">
+      {/* Main Admin Workspace - Extreme Left Sidebar with full viewport height */}
+      <div className="flex-1 flex w-full">
         {/* Desktop Admin Sidebar */}
-        <aside className="hidden lg:block w-64 shrink-0">
-          <div className="sticky top-24 bg-white rounded-2xl border border-[#E8DDD7] p-3 shadow-xs space-y-1">
-            <div className="px-3 py-2 mb-2 bg-slate-900 text-white rounded-xl">
-              <span className="text-[10px] uppercase font-bold text-slate-400">Officer Console</span>
-              <p className="text-xs font-bold truncate">{currentUser?.designation || 'Section Officer'}</p>
-              <p className="text-[10px] text-emerald-400 font-semibold flex items-center space-x-1 mt-0.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span>Active Authorization</span>
-              </p>
-            </div>
+        <aside className="hidden lg:flex flex-col w-64 shrink-0 bg-white border-r border-[#E8DDD7] min-h-[calc(100vh-4rem)] sticky top-16 self-start p-3 shadow-xs">
+          <div className="px-3 py-2.5 mb-2 bg-slate-900 text-white rounded-xl">
+            <span className="text-[10px] uppercase font-bold text-slate-400">Officer Console</span>
+            <p className="text-xs font-bold truncate text-white mt-0.5">{currentUser?.name || 'Admin'}</p>
+            <p className="text-[11px] text-slate-400">Admin ID: {currentUser?.adminId || '001'}</p>
+            <p className="text-[10px] text-emerald-400 font-semibold flex items-center space-x-1.5 mt-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              <span>Active Authorization</span>
+            </p>
+          </div>
 
-            <nav className="space-y-0.5">
-              {adminNav.map((item) => {
-                const active = location.pathname === item.path || (item.path !== '/admin/dashboard' && location.pathname.startsWith(item.path));
-                const Icon = item.icon;
-                return (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition ${
-                      active
-                        ? 'bg-[#014BAA] text-white shadow-xs'
-                        : 'text-slate-700 hover:bg-[#F8F3F0] hover:text-[#014BAA]'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-2.5">
-                      <Icon className={`w-4 h-4 ${active ? 'text-white' : 'text-slate-500'}`} />
-                      <span>{item.label}</span>
-                    </div>
+          <nav className="space-y-0.5 flex-1">
+            {adminNav.map((item) => {
+              const active = location.pathname === item.path || (item.path !== '/admin/dashboard' && location.pathname.startsWith(item.path));
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition ${
+                    active
+                      ? 'bg-[#014BAA] text-white shadow-xs'
+                      : 'text-slate-700 hover:bg-[#F8F3F0] hover:text-[#014BAA]'
+                  }`}
+                >
+                  <div className="flex items-center space-x-2.5">
+                    <Icon className={`w-4 h-4 ${active ? 'text-white' : 'text-slate-500'}`} />
+                    <span>{item.label}</span>
+                  </div>
 
-                    {item.badge && !active && (
-                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-100 text-purple-800 font-bold">
-                        {item.badge}
-                      </span>
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
+                  {item.badge && !active && (
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-purple-100 text-purple-800 font-bold">
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
 
-            <div className="pt-3 border-t border-[#E8DDD7] mt-3 px-2">
-              <p className="text-[10px] text-slate-400 font-medium">
-                MoTA Portal • Problem Statement ID: 26239
-              </p>
-            </div>
+          <div className="pt-3 border-t border-[#E8DDD7] mt-3 px-2">
+            <p className="text-[10px] text-slate-400 font-medium">
+              Adivya Portal • Problem Statement ID: 26239
+            </p>
           </div>
         </aside>
 
@@ -207,7 +206,10 @@ export const AdminLayout = () => {
             <div className="relative w-72 bg-white h-full p-4 flex flex-col justify-between shadow-xl">
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-[#E8DDD7]">
-                  <span className="font-bold text-sm text-[#014BAA]">Ministry Scrutiny Console</span>
+                  <div>
+                    <span className="font-bold text-sm text-[#014BAA]">Adivya Admin Console</span>
+                    <p className="text-[11px] text-slate-500">{currentUser?.name || 'Admin'} • ID: {currentUser?.adminId || '001'}</p>
+                  </div>
                   <button onClick={() => setSidebarOpen(false)} className="p-1 rounded text-slate-500">
                     <X className="w-5 h-5" />
                   </button>
@@ -234,7 +236,7 @@ export const AdminLayout = () => {
               </div>
               <button
                 onClick={handleLogout}
-                className="w-full flex items-center justify-center space-x-2 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-sm font-semibold hover:bg-rose-50 hover:text-rose-600"
+                className="w-full flex items-center justify-center space-x-2 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-sm font-semibold hover:bg-rose-50 hover:text-rose-600 cursor-pointer"
               >
                 <LogOut className="w-4 h-4" />
                 <span>Sign Out</span>
@@ -244,7 +246,7 @@ export const AdminLayout = () => {
         )}
 
         {/* Content Viewport */}
-        <main className="flex-1 min-w-0">
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
           <Outlet />
         </main>
       </div>

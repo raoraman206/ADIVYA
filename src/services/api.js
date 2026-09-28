@@ -69,16 +69,40 @@ const saveNotifications = (notifs) => {
 // Helper simulated latency
 const delay = (ms = 80) => new Promise((resolve) => setTimeout(resolve, ms));
 
+let inMemorySubmittedApplication = null;
+
 /**
  * Clean API Service Layer (Backend & AI integration ready)
  */
 export const api = {
+  // In-memory prototype session application state
+  getSubmittedApplication() {
+    return inMemorySubmittedApplication;
+  },
+
+  setSubmittedApplication(app) {
+    inMemorySubmittedApplication = app;
+  },
+
+  async getActiveApplicantApplication(currentUserId) {
+    if (inMemorySubmittedApplication) {
+      return inMemorySubmittedApplication;
+    }
+    if (currentUserId && currentUserId !== 'APPLICANT-SESSION') {
+      const apps = getStoredApplications();
+      const app = apps.find((a) => a.id === currentUserId);
+      if (app) return { ...app };
+    }
+    return null;
+  },
+
   // Clear stored application data
   async resetToDefaultData() {
     localStorage.removeItem(APPS_STORAGE_KEY);
     localStorage.removeItem(SCHEMES_STORAGE_KEY);
     localStorage.removeItem(RULES_STORAGE_KEY);
     localStorage.removeItem(NOTIFS_STORAGE_KEY);
+    inMemorySubmittedApplication = null;
     return true;
   },
 
@@ -151,6 +175,7 @@ export const api = {
 
     apps.unshift(newApp);
     saveApplications(apps);
+    inMemorySubmittedApplication = newApp;
 
     // Add notification for admin
     const notifs = getStoredNotifications();

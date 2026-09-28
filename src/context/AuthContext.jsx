@@ -8,7 +8,19 @@ export const AuthProvider = ({ children }) => {
     const saved = localStorage.getItem('tribal_auth_user_v2');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const u = JSON.parse(saved);
+        if (u && u.role === 'admin') {
+          return {
+            id: u.id || '001',
+            adminId: '001',
+            name: u.name && u.name !== 'R. K. Meena' ? u.name : 'Admin',
+            role: 'admin',
+            designation: u.designation || 'Admin',
+            department: u.department || 'Adivya Administration',
+            email: u.email || 'admin@adivya.gov.in'
+          };
+        }
+        return u;
       } catch {
         return null;
       }
@@ -18,6 +30,10 @@ export const AuthProvider = ({ children }) => {
 
   const [activeRole, setActiveRole] = useState(() => {
     return currentUser?.role || 'applicant';
+  });
+
+  const [sessionApplication, setSessionApplication] = useState(() => {
+    return api.getSubmittedApplication();
   });
 
   useEffect(() => {
@@ -41,9 +57,18 @@ export const AuthProvider = ({ children }) => {
         hasDeficiency: false
       };
     } else {
+      const trimmed = typeof identifier === 'string' ? identifier.trim() : '';
+      let name = 'Applicant';
+      if (trimmed) {
+        if (trimmed.includes('@')) {
+          name = trimmed.split('@')[0];
+        } else {
+          name = trimmed;
+        }
+      }
       user = {
-        id: identifier || 'APPLICANT-SESSION',
-        name: identifier ? identifier.split('@')[0] : 'Applicant',
+        id: trimmed || 'APPLICANT-SESSION',
+        name: name,
         role: 'applicant',
         hasDeficiency: false
       };
@@ -52,14 +77,29 @@ export const AuthProvider = ({ children }) => {
     setActiveRole('applicant');
   };
 
-  const loginAdmin = (officerId = '') => {
+  const loginAdmin = (adminNameOrId = '') => {
+    let name = 'Admin';
+    if (typeof adminNameOrId === 'string' && adminNameOrId.trim()) {
+      const trimmed = adminNameOrId.trim();
+      if (trimmed.includes('@')) {
+        const username = trimmed.split('@')[0];
+        name = username
+          .split(/[._-]/)
+          .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+          .join(' ');
+      } else {
+        name = trimmed;
+      }
+    }
+
     const user = {
-      id: officerId || 'OFFICER-SSO',
-      name: 'Scrutiny Officer',
+      id: '001',
+      adminId: '001',
+      name: name,
       role: 'admin',
-      designation: 'Scrutiny Officer',
+      designation: 'Admin',
       department: 'Adivya Administration',
-      email: officerId ? `${officerId}@adivya.gov.in` : 'admin@adivya.gov.in'
+      email: `${name.toLowerCase().replace(/[^a-z0-9]/g, '') || 'admin'}@adivya.gov.in`
     };
     setCurrentUser(user);
     setActiveRole('admin');
@@ -67,11 +107,14 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setCurrentUser(null);
+    setSessionApplication(null);
+    api.setSubmittedApplication(null);
   };
 
   const resetAllDemoData = async () => {
     await api.resetToDefaultData();
     setCurrentUser(null);
+    setSessionApplication(null);
     window.location.reload();
   };
 
@@ -80,6 +123,8 @@ export const AuthProvider = ({ children }) => {
       value={{
         currentUser,
         activeRole,
+        sessionApplication,
+        setSessionApplication,
         loginApplicant,
         loginAdmin,
         logout,

@@ -34,11 +34,15 @@ export const AdminSettings = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div>
             <span className="text-slate-500 block">Officer Name:</span>
-            <strong className="text-slate-900">{currentUser?.name || 'Scrutiny Officer'}</strong>
+            <strong className="text-slate-900">{currentUser?.name || 'Admin'}</strong>
+          </div>
+          <div>
+            <span className="text-slate-500 block">Admin ID:</span>
+            <strong className="text-slate-900">{currentUser?.adminId || '001'}</strong>
           </div>
           <div>
             <span className="text-slate-500 block">Designation:</span>
-            <strong className="text-slate-900">{currentUser?.designation || 'Scrutiny Officer'}</strong>
+            <strong className="text-slate-900">{currentUser?.designation || 'Admin'}</strong>
           </div>
           <div>
             <span className="text-slate-500 block">Department / Authority:</span>
